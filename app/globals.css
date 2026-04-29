@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #ffffff;
+  --background: #05070d;
+  --foreground: #f8fafc;
 }
 
 html,
@@ -13,11 +13,24 @@ body {
   min-height: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 * {
   box-sizing: border-box;
+}
+
+*::selection {
+  background: rgba(47, 109, 255, 0.28);
+  color: #ffffff;
+}
+
+body {
+  letter-spacing: -0.02em;
 }
 
 a {
@@ -42,14 +55,14 @@ textarea {
 }
 
 ::-webkit-scrollbar-track {
-  background: #18181b;
+  background: #0c1120;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #334155;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #4b637f;
 }

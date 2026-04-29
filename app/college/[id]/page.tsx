@@ -1,13 +1,16 @@
 import { colleges } from "@/data/colleges";
 
-export default function CollegePage({
+export default async function CollegePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const college = colleges.find((c) => c.id === params.id);
+  const { id } = await params;
+  const college = colleges.find((entry) => entry.id === id);
 
-  if (!college) return <div className="p-8">College not found</div>;
+  if (!college) {
+    return <div className="p-8">College not found</div>;
+  }
 
   return (
     <div className="p-8">
@@ -16,11 +19,11 @@ export default function CollegePage({
       <p>Fees: {college.fees}</p>
       <p>Placement: {college.placement}</p>
 
-      <h2 className="text-2xl mt-5 font-bold">Courses</h2>
+      <h2 className="mt-5 text-2xl font-bold">Courses</h2>
 
       <ul className="mt-2">
-        {college.courses.map((course, i) => (
-          <li key={i}>• {course}</li>
+        {college.courses.map((course, index) => (
+          <li key={index}>- {course}</li>
         ))}
       </ul>
     </div>
