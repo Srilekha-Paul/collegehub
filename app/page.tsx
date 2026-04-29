@@ -1,108 +1,170 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { colleges } from "@/data/colleges";
+import { useState } from "react";
+import { Search, Star, MapPin, Heart, Scale, TrendingUp } from "lucide-react";
 
-export default function Home() {
+const colleges = [
+  {
+    id: 1,
+    name: "IIT Delhi",
+    location: "Delhi",
+    fees: "₹2,00,000",
+    rating: 4.9,
+    placement: "95%",
+    type: "Engineering",
+  },
+  {
+    id: 2,
+    name: "Jadavpur University",
+    location: "Kolkata",
+    fees: "₹20,000",
+    rating: 4.7,
+    placement: "88%",
+    type: "Engineering",
+  },
+  {
+    id: 3,
+    name: "NIT Trichy",
+    location: "Tamil Nadu",
+    fees: "₹1,50,000",
+    rating: 4.8,
+    placement: "91%",
+    type: "Engineering",
+  },
+];
+
+export default function HomePage() {
   const [search, setSearch] = useState("");
-  const [favorites, setFavorites] = useState<string[]>([]);
 
   const filtered = colleges.filter((college) =>
     college.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggleFavorite = (id: string) => {
-    let updated = favorites.includes(id)
-      ? favorites.filter((fav) => fav !== id)
-      : [...favorites, id];
-
-    setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
-  };
-
-  useEffect(() => {
-    const saved = localStorage.getItem("favorites");
-    if (saved) setFavorites(JSON.parse(saved));
-  }, []);
-
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-8">
+    <main className="min-h-screen bg-[#050816] text-white">
       {/* Navbar */}
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-bold text-blue-400">CollegeHub</h1>
+      <nav className="flex justify-between items-center px-8 py-5 border-b border-white/10 backdrop-blur-md sticky top-0 z-50 bg-[#050816]/80">
+        <h1 className="text-3xl font-bold text-blue-500">CollegeHub</h1>
 
-        <div className="space-x-4">
+        <div className="flex gap-4">
           <Link href="/login">
-            <button className="px-4 py-2 bg-zinc-800 rounded-xl hover:bg-zinc-700">
+            <button className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
               Login
             </button>
           </Link>
 
           <Link href="/signup">
-            <button className="px-4 py-2 bg-blue-600 rounded-xl hover:bg-blue-500">
+            <button className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
               Sign Up
             </button>
           </Link>
         </div>
-      </div>
+      </nav>
 
       {/* Hero */}
-      <div className="mb-10">
-        <h2 className="text-5xl font-bold mb-3">
-          Discover Your Dream College
+      <section className="text-center py-20 px-6">
+        <h2 className="text-6xl font-bold leading-tight">
+          Discover Your <span className="text-blue-500">Dream College</span>
         </h2>
-        <p className="text-zinc-400">
-          Search, compare and save top colleges in India.
+
+        <p className="text-gray-400 mt-5 text-lg">
+          Search, compare & choose top colleges in India smarter.
         </p>
-      </div>
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search colleges..."
-        className="w-full p-4 rounded-2xl bg-zinc-900 border border-zinc-700 mb-8"
-        onChange={(e) => setSearch(e.target.value)}
-      />
+        {/* Search */}
+        <div className="mt-10 max-w-3xl mx-auto relative">
+          <Search className="absolute left-4 top-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search colleges..."
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-12 py-4 outline-none focus:border-blue-500"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
-      {/* Cards */}
-      <div className="grid md:grid-cols-3 gap-6">
-        {filtered.map((college) => (
-          <div
-            key={college.id}
-            className="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl hover:scale-105 transition"
-          >
-            <h2 className="text-2xl font-bold">{college.name}</h2>
-            <p className="text-zinc-400">{college.location}</p>
-            <p className="mt-2">{college.fees}</p>
-            <p>⭐ {college.rating}</p>
+        {/* Stats */}
+        <div className="grid md:grid-cols-3 gap-6 mt-14 max-w-5xl mx-auto">
+          <StatCard title="500+" desc="Top Colleges" />
+          <StatCard title="95%" desc="Placement Accuracy" />
+          <StatCard title="10K+" desc="Students Helped" />
+        </div>
+      </section>
 
-            {/* Favorite Button */}
-            <button
-              onClick={() => toggleFavorite(college.id)}
-              className="mt-4 w-full bg-pink-600 py-2 rounded-xl hover:bg-pink-500"
-            >
-              {favorites.includes(college.id)
-                ? "❤️ Saved"
-                : "🤍 Save Favorite"}
+      {/* College Cards */}
+      <section className="px-8 pb-20">
+        <div className="flex justify-between items-center mb-8">
+          <h3 className="text-3xl font-bold">Trending Colleges</h3>
+
+          <Link href="/compare">
+            <button className="bg-green-600 px-5 py-3 rounded-xl hover:bg-green-700 flex gap-2">
+              <Scale size={18} /> Compare Colleges
             </button>
+          </Link>
+        </div>
 
-            {/* View Details */}
-            <Link href={`/college/${college.id}`}>
-              <button className="mt-3 px-4 py-2 bg-blue-600 rounded-xl w-full hover:bg-blue-500">
-                View Details
-              </button>
-            </Link>
-          </div>
-        ))}
-      </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {filtered.map((college) => (
+            <div
+              key={college.id}
+              className="bg-white/5 border border-white/10 rounded-2xl p-5 hover:scale-105 transition"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4 className="text-2xl font-semibold">{college.name}</h4>
 
-      {/* Compare */}
-      <Link href="/compare">
-        <button className="mt-10 px-6 py-3 bg-green-600 rounded-xl hover:bg-green-500">
-          Compare Colleges
-        </button>
-      </Link>
+                  <p className="text-gray-400 flex items-center gap-1 mt-2">
+                    <MapPin size={15} /> {college.location}
+                  </p>
+                </div>
+
+                <button>
+                  <Heart className="text-pink-500" />
+                </button>
+              </div>
+
+              <div className="mt-5 space-y-2 text-gray-300">
+                <p>Fees: {college.fees}</p>
+                <p className="flex gap-1 items-center">
+                  <Star size={16} className="text-yellow-400" />
+                  {college.rating}
+                </p>
+                <p className="flex gap-1 items-center">
+                  <TrendingUp size={16} className="text-green-400" />
+                  Placement: {college.placement}
+                </p>
+              </div>
+
+              <div className="mt-4">
+                <span className="bg-blue-600 text-sm px-3 py-1 rounded-full">
+                  {college.type}
+                </span>
+              </div>
+
+              <Link href={`/college/${college.id}`}>
+                <button className="mt-6 w-full bg-blue-600 py-3 rounded-xl hover:bg-blue-700">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function StatCard({
+  title,
+  desc,
+}: {
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+      <h3 className="text-4xl font-bold text-blue-500">{title}</h3>
+      <p className="text-gray-400 mt-2">{desc}</p>
     </div>
   );
 }
